@@ -1,0 +1,161 @@
+Download the LIRC library
+
+sudo apt-get install lirc
+
+Step 2: Set up lirc:
+
+Open your /etc/modules file:
+
+sudo nano /etc/modules
+
+Add this to the end:
+
+lirc_dev
+
+lirc_rpi gpio_in_pin=23 gpio_out_pin=22
+
+Press Ctrl +O and Ctrl +X, save and exit .
+
+Edit the /etc/lirc/hardware.conf file:
+
+sudo nano /etc/lirc/hardware.conf
+
+Modify the file as shown below:
+
+# Run "lircd --driver=help" for a list of supported drivers.
+
+DRIVER="default"
+
+# usually /dev/lirc0 is the correct setting for systems using udev
+
+DEVICE="/dev/lirc0"
+
+MODULES="lirc_rpi"
+
+Press Ctrl +O and Ctrl +X, save and exit.
+
+Copy the remote configuration file lircd.conf to/home/pi and /etc/lirc:
+
+cd /home/pi/SunFounder_SensorKit_for_RPi2
+
+cp lircd.conf /home/pi
+
+sudo cp lircd.conf /etc/lirc/
+
+Open the /boot/config.txt file:
+
+sudo nano /boot/config.txt
+
+Add the following line to the end:
+
+dtoverlay=lirc-rpi:gpio_in_pin=23,gpio_out_pin=22
+
+Press Ctrl +O and Ctrl +X, save and exit .
+
+Reboot the Raspberry Pi after the change.
+
+sudo reboot
+
+Step 3: Test the IR receiver
+
+Check if lirc module is loaded:
+
+ls /dev/li*
+
+You should see this:
+
+/dev/lirc0      /dev/lircd
+
+Run the command to stop lircd and start outputting raw data from the IR receiver:
+
+irw
+
+When you press a button on the remote, you can see the button name printed on the screen.
+
+pi@raspberrypi:~ $ irw
+
+0000000000000001 00 KEY_CHANNELDOWN /home/pi/lircd.conf
+
+0000000000000002 00 KEY_CHANNEL /home/pi/lircd.conf
+
+0000000000000003 00 KEY_CHANNELUP /home/pi/lircd.conf
+
+0000000000000004 00 KEY_PREVIOUS /home/pi/lircd.conf
+
+0000000000000005 00 KEY_NEXT /home/pi/lircd.conf
+
+0000000000000006 00 KEY_PLAYPAUSE /home/pi/lircd.conf
+
+0000000000000007 00 KEY_VOLUMEDOWN /home/pi/lircd.conf
+
+0000000000000008 00 KEY_VOLUMEUP /home/pi/lircd.conf
+
+0000000000000009 00 KEY_EQUAL /home/pi/lircd.conf
+
+000000000000000a 00 KEY_NUMERIC_0 /home/pi/lircd.conf
+
+0000000000000014 00 BTN_0 /home/pi/lircd.conf
+
+0000000000000015 00 BTN_1 /home/pi/lircd.conf
+
+000000000000000b 00 KEY_NUMERIC_1 /home/pi/lircd.conf
+
+000000000000000c 00 KEY_NUMERIC_2 /home/pi/lircd.conf
+
+000000000000000d 00 KEY_NUMERIC_3 /home/pi/lircd.conf
+
+000000000000000e 00 KEY_NUMERIC_4 /home/pi/lircd.conf
+
+000000000000000f 00 KEY_NUMERIC_5 /home/pi/lircd.conf
+
+0000000000000010 00 KEY_NUMERIC_6 /home/pi/lircd.conf
+
+0000000000000011 00 KEY_NUMERIC_7 /home/pi/lircd.conf
+
+0000000000000012 00 KEY_NUMERIC_8 /home/pi/lircd.conf
+
+0000000000000013 00 KEY_NUMERIC_9 /home/pi/lircd.conf
+
+If it does not appear, somewhere may be incorrectly configured. Check again that you’ve connected everything and haven’t crossed any wires.
+
+
+For C language users:
+
+Step 4: Download LIRC client library:
+
+sudo apt-get install liblircclient-dev
+
+Step 5: Change directory
+
+ cd /home/pi/SunFounder_SensorKit_for_RPi2/C/23_ircontrol/
+
+Step 6: Create a lirc directory under /etc/lirc/:
+
+sudo mkdir /etc/lirc/lirc/
+
+Copy the lircrc file to /etc/lirc/lirc/:
+
+sudo cp lircrc /etc/lirc/lirc/
+
+Step 7: Compile
+
+gcc ircontrol.c -lwiringPi -llirc_client
+
+Step 8: Run
+
+sudo ./a.out
+
+
+For Python users:
+
+Step 4: Download pylirc:
+
+sudo apt-get install python-pylirc
+
+Step 5: Change directory:
+
+cd /home/pi/SunFounder_SensorKit_for_RPi2/Python/
+
+Step 6: Run
+
+sudo python 23_ircontrol.py

@@ -1,0 +1,25 @@
+nano ~/.asoundrc #cmd for setting bluealsa defaults
+
+replace asoundrc contents with:
+    defaults.bluealsa.interface "hci0" 
+    defaults.bluealsa.device "94:7D:09:35:5F:12" 
+    defaults.bluealsa.profile "a2dp" 
+    defaults.bluealsa.delay 10000
+
+the steps above allow you to use this command: aplay -D bluealsa test16.wav
+
+if you get the error below then make sure ~/.asoundrc hasnt been overwritten
+
+ALSA lib confmisc.c:1281:(snd_func_refer) Unable to find definition 'defaults.bluealsa.device'
+ALSA lib conf.c:4528:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:4996:(snd_config_expand) Args evaluate error: No such file or directory
+ALSA lib pcm.c:2495:(snd_pcm_open_noupdate) Unknown PCM bluealsa
+aplay: main:788: audio open error: No such file or directory
+
+
+sudo nano /etc/asound.conf <- edit this file instead of ~/.asoundrc if asound gets overwritten after a reboot
+
+
+https://www.sigmdel.ca/michel/ha/rpi/bluetooth_02_en.html
+
+the above website has instructions to configure the default rasbian bluetooth driver
